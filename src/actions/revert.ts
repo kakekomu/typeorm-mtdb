@@ -1,19 +1,19 @@
 import { platformDataSource, tenantDataSource } from "../sources";
 import { DataSource } from "typeorm";
-import { getTenantRepository, type Config, Logger } from "../utils";
+import { getTenantRepository, type Config, Logger, Target } from "../utils";
 
-export default async function revert(this: Config, target: string) {
+export default async function revert(this: Config, target: Target) {
     const providerConnection = await platformDataSource.then((x) =>
         x.initialize()
     );
     switch (target) {
-        case "provider":
+        case "platform":
             const logger = new Logger("Provider");
             logger.log("Reverting last migration");
             await providerConnection.undoLastMigration();
             logger.log("Revert done");
             process.exit(0);
-        case "consumer":
+        case "tenant":
             const tenantsRepo = getTenantRepository.call(
                 this,
                 providerConnection

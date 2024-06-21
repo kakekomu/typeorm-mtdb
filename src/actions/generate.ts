@@ -1,7 +1,7 @@
 import { execSync } from "child_process";
-import { Config } from "../utils";
+import { Config , Target} from "../utils";
 
-export default async function generate(this: Config, target: string) {
+export default async function generate(this: Config, target: Target) {
     switch (target) {
         case "tenant":
             if (!this.tenant.migration.dir) {

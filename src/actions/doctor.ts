@@ -1,6 +1,6 @@
 import { platformDataSource, tenantDataSource } from "../sources";
 import { DataSource, DataSourceOptions } from "typeorm";
-import { Config, getTenantRepository, Logger } from "../utils";
+import { Config, getTenantRepository, Logger , Target} from "../utils";
 import { checkDatabase } from "typeorm-extension";
 
 async function listExecutedMigrations(
@@ -13,7 +13,7 @@ async function listExecutedMigrations(
     return launchedMigrations;
 }
 
-export default async function doctor(this: Config, target: string) {
+export default async function doctor(this: Config, target: Target) {
     const platformConnection = await platformDataSource.then((x) =>
         x.initialize()
     );

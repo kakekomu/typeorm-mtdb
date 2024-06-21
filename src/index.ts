@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { generate, migrate, revert, doctor } from "./actions";
+import { generate, migrate, revert, doctor, sync } from "./actions";
 import { readConfig, parseArgs } from "./utils";
 
 async function main() {
@@ -17,6 +17,8 @@ async function main() {
                 return revert.bind(config);
             case "doctor":
                 return doctor.bind(config);
+            case "sync":
+                return sync.bind(config);
             default:
                 throw new Error("Invalid action");
         }

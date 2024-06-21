@@ -1,13 +1,13 @@
 import { platformDataSource, tenantDataSource } from "../sources";
 import { DataSource } from "typeorm";
-import { Logger, getTenantRepository, Config } from "../utils";
+import { Logger, getTenantRepository, Config, Target } from "../utils";
 
-export default async function migrate(this: Config, target: string) {
+export default async function migrate(this: Config, target: Target) {
     const providerConnection = await platformDataSource.then((x) =>
         x.initialize()
     );
     switch (target) {
-        case "consumer":
+        case "tenant":
             const tenantsRepo = getTenantRepository.call(
                 this,
                 providerConnection
@@ -41,7 +41,7 @@ export default async function migrate(this: Config, target: string) {
                 logger.log("Migration done");
             }
             process.exit(0);
-        case "provider":
+        case "platform":
             const logger = new Logger("Platform");
             logger.log("Migration start");
             const hasPendingMigration =

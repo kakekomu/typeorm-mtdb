@@ -1,6 +1,15 @@
-export const actions = ["generate", "migrate", "revert", "doctor"] as const;
-export const targets = ["platform", "tenant"] as const;
 import * as yargs from "yargs";
+
+export const actions = [
+    "generate",
+    "migrate",
+    "revert",
+    "doctor",
+    "sync",
+] as const;
+export const targets = ["platform", "tenant"] as const;
+export type Action = (typeof actions)[number];
+export type Target = (typeof targets)[number];
 
 export default async function () {
     const args = yargs
