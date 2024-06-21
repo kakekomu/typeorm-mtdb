@@ -1,24 +1,34 @@
+import { readFileSync } from "fs";
 import { join } from "path";
 
-type Config = {
-  platform: {
-    database: string;
-    migrations: string[];
-    entities: string[];
-    tenantEntity: string;
-  };
-  tenant: {
-    prefix: string;
-    migrations: string[];
-    entities: string[];
-    masterDbName: string;
-  };
+type MigrationConfig = {
+    pattern: string[];
+    dir: string;
+    tableName: string;
 };
 
-export function readConfig() {
-  const configfilepath = join(process.cwd(), "mtdb.config.json");
-  const config = require(configfilepath);
-  return config as Config;
-}
+export type Config = {
+    platform: {
+        database: string;
+        migration: MigrationConfig;
+        entities: string[];
+        tenantEntity: string;
+    };
+    tenant: {
+        prefix: string;
+        migration: MigrationConfig;
+        entities: string[];
+        masterDbName: string;
+    };
+    relation: {
+        tenantTable: string;
+        keyColumn: string;
+    };
+};
 
-readConfig();
+export default function () {
+    const configfilepath = join(process.cwd(), "mtdb.config.json");
+    const file = readFileSync(configfilepath, "utf-8");
+    const config = JSON.parse(file);
+    return config as Config;
+}

@@ -16,11 +16,6 @@
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
-  },
-  "ts-node": {
-    "esm": true,
-    "require": [
-      "tsconfig-paths/register"
-    ]
-  }
+    "rootDir": "src",
+  }, 
 }

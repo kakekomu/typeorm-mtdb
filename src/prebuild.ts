@@ -1,6 +1,6 @@
 import { rmSync, existsSync } from 'fs';
 import { join } from 'path';
-import Logger from './logger';
+import Logger from './utils/logger';
 import { execSync } from 'child_process';
 
 async function transpileTs() {
