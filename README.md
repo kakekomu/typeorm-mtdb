@@ -20,16 +20,11 @@ The main purpose of this library is to efficiently manage migration and synchron
 
 The CLI is available through the `mtdb` command.
 
-Every <target> in this document is `platform` or `tenant`.
-
-Specify the target on which you want to execute the action.
+Every `<target>` in this document is `platform` or `tenant`. Specify the target on which you want to execute the action.
 
 ### `mtdb doctor <target>`
 
-Check current databse status in yaml format.
-
-Displays the execution status of the target's migrations.
-
+Displays the execution status of the target's migrations in yaml format.
 When executed for a tenant, it will be displayed along with the presence or absence of each schema.
 
 The results are displayed on standard output.
