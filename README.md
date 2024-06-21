@@ -4,12 +4,7 @@ Multitenant management system based on TypeOrm.
 
 Provides utilities with CLI
 
-- [Prerequisite](#prerequisite)
-- [Usage](#usage)
-  - [doctor](#mtdb-doctor-target)
-
-
-### Prerequisite
+## Prerequisite
 
 In this library, there are two concepts: `platform` and `tenant`.
 
@@ -20,6 +15,12 @@ There are as many tenants as there are records in the table.
 Also, each tenant has a schema with the same structure.
 
 The main purpose of this library is to efficiently manage migration and synchronization in multi-tenant structure.
+
+# Contents 
+- [Prerequisite](#prerequisite)
+- [Usage](#usage)
+  - [doctor](#mtdb-doctor-target)
+
 
 ## Usage
 
