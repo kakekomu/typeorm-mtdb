@@ -1,6 +1,6 @@
 import { platformDataSource, tenantDataSource } from "../sources";
 import { DataSource, DataSourceOptions } from "typeorm";
-import { Config, getTenantRepository, Logger , Target} from "../utils";
+import { Config, getTenantRepository, Logger, Target } from "../utils";
 import { checkDatabase } from "typeorm-extension";
 
 async function listExecutedMigrations(
@@ -44,10 +44,7 @@ export default async function doctor(this: Config, target: Target) {
                 x.initialize()
             );
             const tenantMigrations = tenantMaster.migrations;
-            const tenantsRepo = getTenantRepository.call(
-                this,
-                platformConnection
-            );
+            const tenantsRepo = getTenantRepository(this, platformConnection);
             const tenants = await tenantsRepo.find();
             logger.log("Tenants:", 1);
             logger.log(`Count: ${tenants.length}`, 2);

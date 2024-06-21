@@ -14,10 +14,7 @@ export default async function revert(this: Config, target: Target) {
             logger.log("Revert done");
             process.exit(0);
         case "tenant":
-            const tenantsRepo = getTenantRepository.call(
-                this,
-                providerConnection
-            );
+            const tenantsRepo = getTenantRepository(this, providerConnection);
             const tenants = await tenantsRepo.find();
             const consumerConnection = await tenantDataSource.then((x) =>
                 x.initialize()

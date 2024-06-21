@@ -8,10 +8,7 @@ export default async function migrate(this: Config, target: Target) {
     );
     switch (target) {
         case "tenant":
-            const tenantsRepo = getTenantRepository.call(
-                this,
-                providerConnection
-            );
+            const tenantsRepo = getTenantRepository(this, providerConnection);
             const tenants = await tenantsRepo.find();
             console.log(`Found ${tenants.length} clients`);
             const consumerConnection = await tenantDataSource.then((x) =>

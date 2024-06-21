@@ -10,9 +10,7 @@
         "mtdb": "dist/index.js"
     },
     "scripts": {
-        "test:cli": "yarn tsc && node dist/index.js",
-        "build": "webpack build --mode development",
-        "test": "node dist/utils/readconfig.js"
+        "dev": "ts-node src/index.ts --dev"
     },
     "author": "",
     "license": "ISC",
