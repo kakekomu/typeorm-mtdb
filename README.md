@@ -4,6 +4,11 @@ Multitenant management system based on TypeOrm.
 
 Provides utilities with CLI
 
+- [Prerequisite](#prerequisite)
+- [Usage](#usage)
+  - [doctor](#mtdb-doctor-target)
+
+
 ### Prerequisite
 
 In this library, there are two concepts: `platform` and `tenant`.
@@ -21,6 +26,7 @@ The main purpose of this library is to efficiently manage migration and synchron
 The CLI is available through the `mtdb` command.
 
 Every `<target>` in this document is `platform` or `tenant`. Specify the target on which you want to execute the action.
+
 
 ### `mtdb doctor <target>`
 
