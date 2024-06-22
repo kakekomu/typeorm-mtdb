@@ -1,62 +1,60 @@
 # typeorm-multitenant-db
 
-typeorm-based CLI multi-tenant management tool
+typeormベースのCLIマルチテナント管理ツール
 
-The main purpose of this library is to efficiently manage migration management and synchronization of tenant DBs.
+本ライブラリの主な目的はマイグレーション管理とテナントDBの同期を効率的に管理することにあります。
 
-## Concepts
+## コンセプト
 
-The multi-tenant scheme adopted here is a `schema-based` scheme where each tenant has its own unique space schema with the same structure.
+ここで採用するマルチテナントの方式は、各テナントがそれぞれ同じ構造の固有空間のスキーマをもつ`スキーマベース`の方式です。
 
-It assumes a configuration between a single `platform` and multiple `tenants` both of which cannot have tenants.
+単一の`platform`と複数の`tenant`両者間の構成を想定しており、テナントがテナントを持つことはできません。
 
-Each tenant has its own schema, but uses the `master tenant` schema to manage migration.
+テナントはそれぞれのスキーマを保有しますが、マイグレーションを管理するために`マスターテナント`スキーマを用います。
 
-### Synchronization of tenants' schemas
+### テナントのスキーマを同期させる方法
 
-PLATFORM is basically the same as the usual database management scheme using migration and entity.
+platformは通常のmigrationとentityを使うデータベースの管理方式と基本的に同じです。
 
-However, tenant uses one migratio shared by multiple schemas.
+しかし、tenantは１つのmigratioを複数のスキーマで共有して使います。
 
-Here, we use the `master tenant` schema to solve this problem.
+ここでは、`マスターテナント`スキーマを用いて解決します。
 
-The master tenant is a single schema and is the basis for all other tenants.
+マスターテナントは単一スキーマで、他のすべてのテナントの基準となります。
 
-Tenant migrations and entities are first reflected in the `master tenant`, then each tenant schema is synchronized using the command `distribute`.
+テナントのマイグレーションやエンティティをまず`マスターテナント`に反映したあと、`distribute` というコマンドを利用してそれぞれのテナントスキーマを同期させます。
 
-The same method is used for `revert` and `migrate`.
+`revert`や`migrate`においても同じやり方で管理します。
 
-The master tenant can also be used effectively in a development environment with only one tenant.
+マスターテナントはテナントが一個しかない開発環境でも有効に活用できます。
 
-You can develop locally against the master tenant and have the production environment point to the normal tenant schema.
+ローカルではマスターテナントに対して開発を行い、製品環境では通常のテナントスキーマを向けさせることができます。
 
-### Management of tenants
+### テナントを管理する方法
 
-Specify a specific table in the platform schema and synchronize this record with the tenant schema.
-The `spawn` command will generate a schema based on the table.
+platformスキーマに特定のテーブルを指定して、このレコードとテナントスキーマを同期させます。
+`spawn`コマンドを利用すると、テーブルをもとにスキーマが生成されます。
+
 # Contents 
-- [Concepts](#Concepts)
+- [コンセプト](#コンセプト)
 - [Usage](#usage)
   - [doctor](#mtdb-doctor-target)
 
 
-# Usage
+## Usage
 
 The CLI is available through the `mtdb` command.
 
 Every `<target>` in this document is `platform` or `tenant`. Specify the target on which you want to execute the action.
 
-## Original features
+## オリジナル機能
 
-### [`mtdb spawn`](./docs/actions/spawn.md)
+### [`mtdb spawn`](./actions/spawn-ja.md)
 
-Synchronize instances of tenant schema. If record exists `platform`, then creates schema for it.
+テナントスキーマとプラットフォームのテナントレコードを同期させます。
+必要に応じてスキーマを作成します。
 
-Any migrations are not to be executed.
-
-If you want to execute them, use `distribute`
-
-### [`mtdb distribute`](./docs/actions/distribute.md)
+### [`mtdb distribute`](./actions/distribute.md)
 
 Distribute migrations to all tenant schemas from master tenant schema.
 
@@ -83,7 +81,7 @@ mtdb distribute
 ```
 
 
-### [`mtdb doctor <target>`](./docs/actions/doctor.md)
+### [`mtdb doctor <target>`](./actions/doctor.md)
 
 Displays the execution status of the target's migrations in yaml format.
 When executed for a tenant, it will be displayed along with the presence or absence of each schema.
@@ -93,7 +91,7 @@ The results are displayed on standard output.
 
 Alias of typeorm commands but works with target you specified.
 
-### [`mtdb generate <target>`](./docs/actions/generate.md)
+### [`mtdb generate <target>`](./actions/generate.md)
 
 Generate migrations on target database
 
@@ -113,10 +111,8 @@ Alias of [`typeorm migration:revert`](https://orkhan.gitbook.io/typeorm/docs/mig
 Alias of [`typeorm migration:create`](https://orkhan.gitbook.io/typeorm/docs/migrations#creating-a-new-migration)
 
 
-## [Configuration](./docs/config.md)
+## Configuration
 Set `mtdb.config.json` in your project root.
-
-You can use [typescript config file](./docs/config.md#config-with-mtdbconfigts) if you want hints with comments.
 ```jsonc
 {
     // Configuration for plaform
