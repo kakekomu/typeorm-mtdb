@@ -1,6 +1,5 @@
 import { platformDataSource, tenantDataSource } from "../sources";
-import { DataSource } from "typeorm";
-import { Logger, getTenantRepository, Config, Target } from "../utils";
+import { Config, Logger, Target, getTenantRepository } from "../utils";
 
 export default async function (this: Config, target: Target) {
     const providerConnection = await platformDataSource.then((x) =>
@@ -32,7 +31,8 @@ export default async function (this: Config, target: Target) {
                 `Tenant: ${tenantConnection.options.database}`
             );
             tenantLogger.log("Migration start");
-            const tenantHasPendingMigration = await tenantConnection.showMigrations();
+            const tenantHasPendingMigration =
+                await tenantConnection.showMigrations();
             if (tenantHasPendingMigration) {
                 tenantLogger.log("Pending migration found");
                 await tenantConnection.runMigrations();

@@ -1,15 +1,14 @@
+import { checkDatabase } from "typeorm-extension";
+import { platformDataSource, tenantDataSource } from "../sources";
 import {
     Config,
     Logger,
-    Target,
     getTenantDataSource,
     getTenantDbNames,
     listExecutedMigrations,
 } from "../utils";
-import { platformDataSource, tenantDataSource } from "../sources";
-import { checkDatabase } from "typeorm-extension";
 
-export default async function (this: Config, target: Target) {
+export default async function (this: Config) {
     const logger = new Logger("Distribute");
     logger.log("Distributing to tenant schemas");
     const providerConnection = await platformDataSource.then((x) =>

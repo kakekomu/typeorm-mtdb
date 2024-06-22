@@ -1,6 +1,5 @@
 import { platformDataSource, tenantDataSource } from "../sources";
-import { DataSource } from "typeorm";
-import { getTenantRepository, type Config, Logger, Target } from "../utils";
+import { Logger, Target, getTenantRepository, type Config } from "../utils";
 
 export default async function (this: Config, target: Target) {
     const providerConnection = await platformDataSource.then((x) =>

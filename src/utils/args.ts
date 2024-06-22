@@ -1,5 +1,5 @@
 import * as yargs from "yargs";
-const { hideBin } = require('yargs/helpers');
+const { hideBin } = require("yargs/helpers");
 
 export const actions = [
     "generate",
@@ -8,6 +8,7 @@ export const actions = [
     "doctor",
     "spawn",
     "distribute",
+    "create",
 ] as const;
 export const targets = ["platform", "tenant"] as const;
 export type Action = (typeof actions)[number];
@@ -48,6 +49,16 @@ export default async function () {
         .command(
             "doctor <target>",
             "Check the status of migrations on target database",
+            (yargs) =>
+                yargs.positional("target", {
+                    describe: "Database target to run action on",
+                    type: "string",
+                    choices: targets,
+                })
+        )
+        .command(
+            "create <target>",
+            "Create a new migration on target database",
             (yargs) =>
                 yargs.positional("target", {
                     describe: "Database target to run action on",

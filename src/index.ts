@@ -7,11 +7,13 @@ import {
     doctor,
     distribute,
     spawn,
+    create,
 } from "./actions";
 import { readConfig, parseArgs } from "./utils";
 
 async function main() {
     const args = await parseArgs();
+    console.log(args.target);
     const config = readConfig();
     const action = (() => {
         switch (args._[0]) {
@@ -27,6 +29,8 @@ async function main() {
                 return spawn.bind(config);
             case "distribute":
                 return distribute.bind(config);
+            case "create":
+                return create.bind(config, args.target);
             default:
                 throw new Error("Invalid action");
         }

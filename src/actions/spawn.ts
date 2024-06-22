@@ -1,3 +1,5 @@
+import { checkDatabase, createDatabase } from "typeorm-extension";
+import { platformDataSource } from "../sources";
 import {
     Config,
     Logger,
@@ -5,8 +7,6 @@ import {
     getTenantDataSource,
     getTenantDbNames,
 } from "../utils";
-import { platformDataSource } from "../sources";
-import { checkDatabase, createDatabase } from "typeorm-extension";
 
 export default async function (this: Config, target: Target) {
     const logger = new Logger("Spawn");
