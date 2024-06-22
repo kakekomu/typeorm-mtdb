@@ -1,6 +1,6 @@
 {
     "name": "typeorm-mtdb",
-    "version": "0.0.15",
+    "version": "0.1.0",
     "description": "Multi-Tenant Database utility based on TypeORM",
     "main": "dist/index.js",
     "files": [
