@@ -1,0 +1,8 @@
+node_modules
+dist
+mtdb.config.*
+
+*.tgz
+temp
+.DS_Store
+.env
