@@ -3,7 +3,7 @@ import { readConfig, parseArgs, arraySafe } from "../utils";
 
 async function buildTenantDataSource() {
     await parseArgs();
-    const config = readConfig();
+    const config = await readConfig();
     return new DataSource({
         name: config.tenant.masterDbName,
         type: "mysql",

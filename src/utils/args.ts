@@ -75,9 +75,7 @@ export default async function () {
         })
         .parseSync();
 
-    if (args.dev) {
-        const { config } = await import("dotenv");
-        config();
-    }
+    const { config } = await import("dotenv");
+    config();
     return args;
 }

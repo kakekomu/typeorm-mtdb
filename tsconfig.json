@@ -2,7 +2,7 @@
   "compilerOptions": {
     "module": "commonjs",
     "declaration": true,
-    "removeComments": true,
+    "removeComments": false,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
@@ -17,5 +17,8 @@
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
     "rootDir": "src",
-  }, 
+  },
+  "include": [
+    "src/**/*.ts"
+  ]
 }

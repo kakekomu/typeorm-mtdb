@@ -3,7 +3,7 @@ import { readConfig, parseArgs, arraySafe } from "../utils";
 
 async function buildPlatformDataSource() {
     await parseArgs();
-    const config = readConfig();
+    const config = await readConfig();
     return new DataSource({
         name: config.platform.database,
         type: "mysql",
