@@ -1,5 +1,4 @@
-import typeormCli from "src/utils/typeorm-cli";
-import { Config, Target } from "../utils";
+import { Config, Target, typeOrmCli } from "../utils";
 
 export default async function (this: Config, target: Target) {
     switch (target) {
@@ -7,7 +6,7 @@ export default async function (this: Config, target: Target) {
             if (!this.tenant.migrationOutDir) {
                 throw new Error("Tenant migration directory not found");
             }
-            typeormCli([
+            typeOrmCli([
                 "migration:generate",
                 `${this.platform.migrationOutDir}/test`,
                 `--dataSource`,
@@ -18,7 +17,7 @@ export default async function (this: Config, target: Target) {
             if (!this.platform.migrationOutDir) {
                 throw new Error("Platform migration directory not found");
             }
-            typeormCli([
+            typeOrmCli([
                 "migration:generate",
                 `${this.platform.migrationOutDir}/test`,
                 `--dataSource`,
