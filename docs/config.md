@@ -1,5 +1,9 @@
 # Configuration
 
+### Migrations and Entities field
+
+Write pattern in typeorm rules. Should specify javascript (transpiled result) file path.
+
 ### Config with `mtdb.config.json`
 
 ```jsonc
