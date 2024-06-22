@@ -4,6 +4,8 @@ typeorm-based CLI multi-tenant management tool
 
 The main purpose of this library is to efficiently manage migration management and synchronization of tenant DBs.
 
+
+
 ## Concepts
 
 The multi-tenant scheme adopted here is a `schema-based` scheme where each tenant has its own unique space schema with the same structure.
@@ -34,6 +36,13 @@ You can develop locally against the master tenant and have the production enviro
 
 Specify a specific table in the platform schema and synchronize this record with the tenant schema.
 The `spawn` command will generate a schema based on the table.
+
+### Installation
+
+typeorm-mtdb is beta now
+```
+yarn add https://github.com/kakekomu/typeorm-mtdb/releases/download/v0.1.0/typeorm-mtdb-v0.1.0.tgz
+```
 
 # Usage
 
