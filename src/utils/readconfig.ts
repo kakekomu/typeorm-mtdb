@@ -2,23 +2,23 @@ import { readFileSync } from "fs";
 import { join } from "path";
 
 type MigrationConfig = {
-    pattern: string[];
-    dir: string;
-    tableName: string;
+    migrations: string[];
+    migrationOutDir: string;
 };
 
 export type Config = {
     platform: {
         database: string;
-        migration: MigrationConfig;
         entities: string[];
         tenantEntity: string;
-    };
+    } & MigrationConfig;
     tenant: {
         prefix: string;
-        migration: MigrationConfig;
         entities: string[];
         masterDbName: string;
+    } & MigrationConfig;
+    common: {
+        migrationTableName: string;
     };
     relation: {
         tenantTable: string;

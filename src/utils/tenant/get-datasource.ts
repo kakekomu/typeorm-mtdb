@@ -7,6 +7,7 @@ export default async function (config: Config, tenantDbName: string) {
     const newOption = {
         ...def.options,
         database: tenantDbName,
+        name: tenantDbName,
     } as DataSourceOptions;
     return new DataSource(newOption);
 }

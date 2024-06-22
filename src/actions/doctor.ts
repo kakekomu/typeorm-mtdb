@@ -1,19 +1,15 @@
 import { platformDataSource, tenantDataSource } from "../sources";
 import { DataSource, DataSourceOptions } from "typeorm";
-import { Config, getTenantRepository, Logger, Target } from "../utils";
+import {
+    Config,
+    getTenantRepository,
+    listExecutedMigrations,
+    Logger,
+    Target,
+} from "../utils";
 import { checkDatabase } from "typeorm-extension";
 
-async function listExecutedMigrations(
-    connection: DataSource
-): Promise<string[]> {
-    const sql = `SELECT name FROM typeorm_migrations;`;
-    const launchedMigrations: string[] = await connection
-        .query(sql)
-        .then((list) => list.map((x: any) => x.name));
-    return launchedMigrations;
-}
-
-export default async function doctor(this: Config, target: Target) {
+export default async function (this: Config, target: Target) {
     const platformConnection = await platformDataSource.then((x) =>
         x.initialize()
     );
@@ -22,11 +18,13 @@ export default async function doctor(this: Config, target: Target) {
         case "platform":
             logger.log("Platform:");
             const metaDatas = platformConnection.entityMetadatas;
-            const entityNames = metaDatas.map((x) => x.name);
             logger.log("Entities:", 1);
-            entityNames.forEach((x) => logger.log(`${x}:`, 2));
+            metaDatas
+                .filter((x) => !x.isJunction)
+                .forEach((x) => logger.log(`${x.name}:`, 2));
             logger.log("Migrations:", 1);
             const launchedMigrations: string[] = await listExecutedMigrations(
+                this,
                 platformConnection
             );
             platformConnection.migrations.forEach((x) => {
@@ -46,6 +44,10 @@ export default async function doctor(this: Config, target: Target) {
             const tenantMigrations = tenantMaster.migrations;
             const tenantsRepo = getTenantRepository(this, platformConnection);
             const tenants = await tenantsRepo.find();
+            logger.log("Entities:", 1);
+            tenantMaster.entityMetadatas
+                .filter((x) => !x.isJunction)
+                .forEach((x) => logger.log(`${x.name}:`, 2));
             logger.log("Tenants:", 1);
             logger.log(`Count: ${tenants.length}`, 2);
             logger.log("Tenant DB:", 2);
@@ -67,7 +69,7 @@ export default async function doctor(this: Config, target: Target) {
                     logger.log("Exists: true", 4);
                 }
                 const connection = await new DataSource(newOption).initialize();
-                const executed = await listExecutedMigrations(connection);
+                const executed = await listExecutedMigrations(this, connection);
                 logger.log("Migrations:", 4);
                 for (const migration of tenantMigrations) {
                     const status = executed.includes(migration.name)
