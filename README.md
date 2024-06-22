@@ -61,6 +61,7 @@ mtdb doctor tenant >> tenant.yml
 ```
 
 ## Configuration
+Set `mtdb.config.json` in your project root.
 ```jsonc
 {
     // Configuration for plaform
