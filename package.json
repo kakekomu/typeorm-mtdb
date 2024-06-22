@@ -10,7 +10,8 @@
         "mtdb": "dist/index.js"
     },
     "scripts": {
-        "dev": "ts-node src/index.ts --dev"
+        "dev": "ts-node src/index.ts --dev",
+        "prepack": "rimraf dist && tsc"
     },
     "author": "",
     "license": "ISC",
@@ -25,6 +26,7 @@
         "chalk": "^5.3.0",
         "dotenv": "^16.4.5",
         "mysql2": "^3.10.1",
+        "rimraf": "^5.0.7",
         "ts-loader": "^9.5.1",
         "ts-node": "^10.9.2",
         "typescript": "^4.7.4"
