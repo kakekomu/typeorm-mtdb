@@ -51,7 +51,7 @@ const config: MtdbConfig = {
     platform: {
         database: "00_provider",
         migrations: ["dist/db/migrations/provider/*.js"],
-        migrationOutDir: "src/temp/migrations/provider",
+        migrationOutDir: "src/db/migrations/provider",
         entities: ["dist/db/entities/provider/*.js"],
     },
     tenant: {
