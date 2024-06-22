@@ -11,8 +11,8 @@ Write pattern in typeorm rules. Should specify javascript (transpiled result) fi
     // Configuration for plaform
     "platform": { 
         "database": "00_provider",
-        "entities": "src/db/entities/provider/*.ts",
-        "migrations": ["src/db/migrations/provider/*.ts"],
+        "entities": ["dist/db/entities/provider/*.js"],
+        "migrations": ["dist/db/migrations/provider/*.ts"],
         // `create` `generate` command creates file in this folder
         "migrationOutDir": "src/db/migrations/provider"
     },
@@ -22,8 +22,8 @@ Write pattern in typeorm rules. Should specify javascript (transpiled result) fi
         // Name of tenant schema will be `02_{relations.tenantTable[relation.keyColumn]}`.
         // If there was record like {'id': 474, 'name': 'Happy tenant'}, schema will be named as `02_474`
         "prefix": "02_",
-        "entities": "src/db/entities/consumer/*.ts",
-        "migrations": ["src/db/migrations/consumer/*.ts"],
+        "entities": ["dist/db/entities/consumer/*.js"],
+        "migrations": ["dist/db/migrations/consumer/*.js"],
         // `create` `generate` command creates file in this folder
         "migrationOutDir": "src/db/migrations/consumer"
     },
@@ -50,16 +50,16 @@ import { MtdbConfig } from "typeorm-mtdb";
 const config: MtdbConfig = {
     platform: {
         database: "00_provider",
-        migrations: ["dist/temp/migrations/provider/*.js"],
+        migrations: ["dist/db/migrations/provider/*.js"],
         migrationOutDir: "src/temp/migrations/provider",
-        entities: "dist/temp/entities/provider/*.js",
+        entities: ["dist/db/entities/provider/*.js"],
     },
     tenant: {
         masterDbName: "01_consumer",
         prefix: "02_",
-        migrations: ["dist/temp/migrations/consumer/*.js"],
-        migrationOutDir: "src/temp/migrations/consumer",
-        entities: "dist/temp/entities/consumer/*.js",
+        migrations: ["dist/db/migrations/consumer/*.js"],
+        migrationOutDir: "src/db/migrations/consumer",
+        entities: ["dist/db/entities/consumer/*.js"],
     },
     common: {
         migrationTableName: "typeorm_migrations",
