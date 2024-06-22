@@ -47,7 +47,7 @@ The CLI is available through the `mtdb` command.
 Every `<target>` in this document is `platform` or `tenant`. Specify the target on which you want to execute the action.
 
 
-### `mtdb doctor <target>`
+### [`mtdb doctor <target>`](./doc/action/doctor.md)
 
 Displays the execution status of the target's migrations in yaml format.
 When executed for a tenant, it will be displayed along with the presence or absence of each schema.
