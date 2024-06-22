@@ -113,8 +113,10 @@ Alias of [`typeorm migration:revert`](https://orkhan.gitbook.io/typeorm/docs/mig
 Alias of [`typeorm migration:create`](https://orkhan.gitbook.io/typeorm/docs/migrations#creating-a-new-migration)
 
 
-## Configuration
+## [Configuration](./docs/config.md)
 Set `mtdb.config.json` in your project root.
+
+You can use [typescript config file](./docs/config.md#config-with-mtdbconfigts) if you want hints with comments.
 ```jsonc
 {
     // Configuration for plaform
