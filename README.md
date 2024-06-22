@@ -59,3 +59,40 @@ So you can save the output to file like this:
 ```
 mtdb doctor tenant >> tenant.yml
 ```
+
+## Configuration
+```jsonc
+{
+    // Configuration for plaform
+    "platform": { 
+        "database": "00_provider",
+        "entities": "src/db/entities/provider/*.ts",
+        "migrations": ["src/db/migrations/provider/*.ts"],
+        // `create` `generate` command creates file in this folder
+        "migrationOutDir": "src/db/migrations/provider"
+    },
+    // Configuration for tenant
+    "tenant": {
+        "masterDbName": "01_consumer",
+        // Name of tenant schema will be `02_{relations.tenantTable[relation.keyColumn]}`.
+        // If there was record like {'id': 474, 'name': 'Happy tenant'}, schema will be named as `02_474`
+        "prefix": "02_",
+        "entities": "src/db/entities/consumer/*.ts",
+        "migrations": ["src/db/migrations/consumer/*.ts"],
+        // `create` `generate` command creates file in this folder
+        "migrationOutDir": "src/db/migrations/consumer"
+    },
+    // Common settings
+    "common": {
+        // Define what table is used for migration management
+        "migrationTableName": "typeorm_migrations"
+    },
+    // Define relations
+    // This setting means that tenants are set in `client` table, and the key is set to `id`.
+    // If records exists in, then tenant schema will be created with `spawn` command.
+    "relation": {
+        "tenantTable": "client",
+        "keyColumn": "id"
+    }
+}
+```
