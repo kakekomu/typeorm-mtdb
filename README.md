@@ -34,11 +34,6 @@ You can develop locally against the master tenant and have the production enviro
 
 Specify a specific table in the platform schema and synchronize this record with the tenant schema.
 The `spawn` command will generate a schema based on the table.
-# Contents 
-- [Concepts](#Concepts)
-- [Usage](#usage)
-  - [doctor](#mtdb-doctor-target)
-
 
 # Usage
 
