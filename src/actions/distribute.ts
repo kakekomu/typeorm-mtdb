@@ -7,6 +7,7 @@ import {
     getTenantDbNames,
     listExecutedMigrations,
 } from "../utils";
+import * as chalk from "chalk";
 
 export default async function (this: Config) {
     const logger = new Logger("Distribute");
@@ -20,11 +21,11 @@ export default async function (this: Config) {
         tenantConnection
     );
     const repo = await getTenantDbNames(this, providerConnection);
-    let created = 0;
     for await (const dbName of repo) {
         const logger = new Logger(`Distribute.${dbName}`);
         const source = await getTenantDataSource(this, dbName);
         const { exists } = await checkDatabase({ options: source.options });
+        let modified = 0;
         if (exists) {
             const connection = await source.initialize();
             const executedMigrations = await listExecutedMigrations(
@@ -40,7 +41,8 @@ export default async function (this: Config) {
                     ) {
                         return {
                             migration: x,
-                            nextAction: "run",
+                            nextAction: "migrate",
+                            chalk: chalk.green,
                         };
                     } else if (
                         !executedInMaster.includes(x.name) &&
@@ -49,14 +51,15 @@ export default async function (this: Config) {
                         return {
                             migration: x,
                             nextAction: "revert",
+                            chalk: chalk.red,
                         };
                     }
                 })
                 .filter(Boolean);
             const runner = connection.createQueryRunner();
-            for await (const { migration, nextAction } of actions) {
-                logger.log(`Migration ${migration.name} ${nextAction}`);
-                if (nextAction === "run") {
+            for await (const { migration, nextAction, chalk } of actions) {
+                logger.log(`Migration ${migration.name} ${chalk(nextAction)}`);
+                if (nextAction === "migrate") {
                     await migration.up(runner);
                     await connection
                         .createQueryBuilder()
@@ -76,7 +79,11 @@ export default async function (this: Config) {
                         .where("name = :name", { name: migration.name })
                         .execute();
                 }
+                modified++;
             }
+
+            await runner.release();
+            logger.log(`Modified: ${modified}`);
         }
     }
     process.exit(0);

@@ -8,6 +8,7 @@ import {
     Target,
 } from "../utils";
 import { checkDatabase } from "typeorm-extension";
+import * as chalk from "chalk"
 
 export default async function (this: Config, target: Target) {
     const platformConnection = await platformDataSource.then((x) =>
@@ -41,7 +42,18 @@ export default async function (this: Config, target: Target) {
             const tenantMaster = await tenantDataSource.then((x) =>
                 x.initialize()
             );
-            const tenantMigrations = tenantMaster.migrations;
+            const tenantMigrations = tenantMaster.migrations.reverse();
+            logger.log("Migrations:", 1);
+            const masterExecuted = await listExecutedMigrations(
+                this,
+                tenantMaster
+            );
+            tenantMigrations.forEach((x) => {
+                const status = masterExecuted.includes(x.name)
+                    ? chalk.green("done")
+                    : chalk.blue("pending");
+                logger.log(`${x.name}: ${status}`, 2);
+            });
             const tenantsRepo = getTenantRepository(this, platformConnection);
             const tenants = await tenantsRepo.find();
             logger.log("Entities:", 1);
@@ -69,14 +81,27 @@ export default async function (this: Config, target: Target) {
                     logger.log("Exists: true", 4);
                 }
                 const connection = await new DataSource(newOption).initialize();
-                const executed = await listExecutedMigrations(this, connection);
+                const tenantExecuted = await listExecutedMigrations(
+                    this,
+                    connection
+                );
                 logger.log("Migrations:", 4);
                 for (const migration of tenantMigrations) {
-                    const status = executed.includes(migration.name)
-                        ? "done"
-                        : "pending";
-                    logger.log(`${migration.name}:`, 5);
-                    logger.log(`Status: ${status}`, 6);
+                    if (
+                        masterExecuted.includes(migration.name) ||
+                        tenantExecuted.includes(migration.name)
+                    ) {
+                        const waitingForDistribution =
+                            !masterExecuted.includes(migration.name) ||
+                            !tenantExecuted.includes(migration.name);
+                        const status = waitingForDistribution
+                            ? chalk.yellow("waiting for distribution")
+                            : chalk.green("done");
+                        logger.log(`${migration.name}: ${status}`, 5);
+                    } else {
+                        const pending = chalk.blue("pending");
+                        logger.log(`${migration.name}: ${pending}`, 5);
+                    }
                 }
             }
             process.exit(0);

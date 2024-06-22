@@ -21,11 +21,11 @@
         "typeorm": "^0.3.17",
         "typeorm-extension": "^3.5.1",
         "dotenv": "^16.4.5",
+        "chalk": "^4.1.2",
         "yargs": "^17.7.2"
     },
     "devDependencies": {
         "@types/yargs": "^17.0.32",
-        "chalk": "^5.3.0",
         "ts-node": "^10.9.2",
         "mysql2": "^3.10.1",
         "rimraf": "^5.0.7",
