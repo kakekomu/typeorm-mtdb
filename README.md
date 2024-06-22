@@ -40,25 +40,78 @@ The `spawn` command will generate a schema based on the table.
   - [doctor](#mtdb-doctor-target)
 
 
-## Usage
+# Usage
 
 The CLI is available through the `mtdb` command.
 
 Every `<target>` in this document is `platform` or `tenant`. Specify the target on which you want to execute the action.
+
+## Original features
+
+### [`mtdb spawn`](./docs/actions/spawn.md)
+
+Synchronize instances of tenant schema. If record exists `platform`, then creates schema for it.
+
+Any migrations are not to be executed.
+
+If you want to execute them, use `distribute`
+
+### [`mtdb distribute`](./docs/actions/distribute.md)
+
+Distribute migrations to all tenant schemas from master tenant schema.
+
+This is key concept for managing mulit-tenant schema.
+
+When manipulating the schema of tenants, the master tenant schema is manipulated first and then applied with distribute.
+
+After distribute is executed, the master tenant schema and all tenants' schemas are synchronized.
+
+For example, following actions can be performed using this concept
+
+#### To revert a tenant's schema:
+
+```
+mtdb revert tenant
+mtdb distribute
+```
+
+#### To migrate a tenant's schema: 
+
+```
+mtdb migrate tenant
+mtdb distribute
+```
 
 
 ### [`mtdb doctor <target>`](./docs/actions/doctor.md)
 
 Displays the execution status of the target's migrations in yaml format.
 When executed for a tenant, it will be displayed along with the presence or absence of each schema.
-
 The results are displayed on standard output.
 
-So you can save the output to file like this:
+## Alias
 
-```
-mtdb doctor tenant >> tenant.yml
-```
+Alias of typeorm commands but works with target you specified.
+
+### [`mtdb generate <target>`](./docs/actions/generate.md)
+
+Generate migrations on target database
+
+Alias of [`typeorm migration:generate`](https://orkhan.gitbook.io/typeorm/docs/migrations#generating-migrations)
+
+### `mtdb migrate <target>`
+
+Run migrations on target database.
+
+
+### `mtdb revert <target>`
+
+Alias of [`typeorm migration:revert`](https://orkhan.gitbook.io/typeorm/docs/migrations#running-and-reverting-migrations)
+
+### `mtdb create <target>`
+
+Alias of [`typeorm migration:create`](https://orkhan.gitbook.io/typeorm/docs/migrations#creating-a-new-migration)
+
 
 ## Configuration
 Set `mtdb.config.json` in your project root.
