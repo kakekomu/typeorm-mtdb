@@ -54,7 +54,7 @@ Every `<target>` in this document is `platform` or `tenant`. Specify the target 
 テナントスキーマとプラットフォームのテナントレコードを同期させます。
 必要に応じてスキーマを作成します。
 
-### [`mtdb distribute`](./docs/actions/distribute.md)
+### [`mtdb distribute`](./actions/distribute.md)
 
 Distribute migrations to all tenant schemas from master tenant schema.
 
@@ -81,7 +81,7 @@ mtdb distribute
 ```
 
 
-### [`mtdb doctor <target>`](./docs/actions/doctor.md)
+### [`mtdb doctor <target>`](./actions/doctor.md)
 
 Displays the execution status of the target's migrations in yaml format.
 When executed for a tenant, it will be displayed along with the presence or absence of each schema.
@@ -91,7 +91,7 @@ The results are displayed on standard output.
 
 Alias of typeorm commands but works with target you specified.
 
-### [`mtdb generate <target>`](./docs/actions/generate.md)
+### [`mtdb generate <target>`](./actions/generate.md)
 
 Generate migrations on target database
 
