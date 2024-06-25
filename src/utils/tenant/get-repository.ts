@@ -3,9 +3,12 @@ import { Config } from "../readconfig";
 
 /** get tenant repositories */
 export default function (config: Config, platformConnection: DataSource) {
-    const { target } = platformConnection.entityMetadatas.find(
+    const matched = platformConnection.entityMetadatas.find(
         (x) => x.tableName === config.relation.tenantTable
     );
-    const tenantsTable = platformConnection.getRepository(target);
+    if (!matched) {
+        return null;
+    }
+    const tenantsTable = platformConnection.getRepository(matched.target);
     return tenantsTable;
 }

@@ -6,3 +6,5 @@ mtdb.config.*
 temp
 .DS_Store
 .env
+
+coverage
