@@ -17,7 +17,7 @@ export default async function (this: Config, target: Target) {
             }
             typeOrmCli([
                 "migration:generate",
-                `${this.platform.migrationOutDir}/test`,
+                `${this.tenant.migrationOutDir}/generated`,
                 `--dataSource`,
                 join(sourcePath, `tenant.js`),
             ]);
@@ -28,7 +28,7 @@ export default async function (this: Config, target: Target) {
             }
             typeOrmCli([
                 "migration:generate",
-                `${this.platform.migrationOutDir}/test`,
+                `${this.platform.migrationOutDir}/generated`,
                 `--dataSource`,
                 join(sourcePath, `platform.js`),
             ]);
