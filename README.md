@@ -1,4 +1,5 @@
-# typeorm-multitenant-db
+# typeorm-multitenant-db 
+[[日本語](./docs/REAMDE-ja.md)]
 
 Typeorm-based CLI multi-tenant management tool
 
