@@ -1,8 +1,28 @@
 # typeorm-multitenant-db
 
-typeorm-based CLI multi-tenant management tool
+Typeorm-based CLI multi-tenant management tool
 
 The main purpose of this library is to efficiently manage migration management and synchronization of tenant DBs.
+
+### Easy way to manage schema based multi tenant db
+
+First, Edit entity and generate migration
+
+```
+mtdb generate tenant
+```
+Then, migrate (run) on master tenant schema.
+
+```
+mtdb migrate tenant
+```
+
+Lastly, distribute migrations from master tenant to the all other tenant schemas
+```
+mtdb distribute
+```
+
+Master tenant schema is also used in development environment
 
 ## Concepts
 
