@@ -16,6 +16,7 @@ export type Target = (typeof targets)[number];
 
 export default async function () {
     const args = yargs(hideBin(process.argv))
+        .command("init", "Initialize multitenant database")
         .command(
             "generate <target>",
             "Generate migrations on target database",

@@ -5,3 +5,4 @@ export { default as revert } from "./revert";
 export { default as spawn } from "./spawn";
 export { default as distribute } from "./distribute";
 export { default as create } from "./create";
+export { default as init } from "./init";

@@ -8,6 +8,7 @@ import {
     distribute,
     spawn,
     create,
+    init,
 } from "./actions";
 import { readConfig, parseArgs } from "./utils";
 
@@ -16,6 +17,8 @@ async function main() {
     const config = await readConfig();
     const action = (() => {
         switch (args._[0]) {
+            case "init":
+                return init.bind(config);
             case "generate":
                 return generate.bind(config, args.target);
             case "migrate":
