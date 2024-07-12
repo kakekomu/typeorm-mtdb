@@ -22,7 +22,7 @@ export type Config = {
     tenant: {
         prefix: string;
         entities: MaybeArray<string>;
-        masterDbName: string;
+        classDbName: string;
     } & MigrationConfig;
     common: {
         migrationTableName: string;

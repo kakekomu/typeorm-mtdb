@@ -15,7 +15,7 @@ export default async function (this: Config) {
     } as DataSourceOptions;
     const tenantOptions = {
         ...defaultConnection.options,
-        database: this.tenant.masterDbName,
+        database: this.tenant.classDbName,
     } as DataSourceOptions;
 
     const { exists: platformExists } = await checkDatabase({

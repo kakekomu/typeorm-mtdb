@@ -146,7 +146,7 @@ Set `mtdb.config.json` in your project root.
     },
     // Configuration for tenant
     "tenant": {
-        "masterDbName": "01_consumer",
+        "classDbName": "01_consumer",
         // Name of tenant schema will be `02_{relations.tenantTable[relation.keyColumn]}`.
         // If there was record like {'id': 474, 'name': 'Happy tenant'}, schema will be named as `02_474`
         "prefix": "02_",
