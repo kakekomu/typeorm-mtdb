@@ -1,170 +1,87 @@
-# typeorm-multitenant-db
+# typeorm-mtdb
 
-typeormベースのCLIマルチテナント管理ツール
+`typeorm-mtdb`は、スキーマベースのマルチテナントデータベースを簡単に管理するためのCLIツールです。このツールはTypeORMをベースにしており、複数のテナントを効率的に管理するための仕組みを提供します。
 
-本ライブラリの主な目的はマイグレーション管理とテナントDBの同期を効率的に管理することにあります。
+## 概要
 
-### マルチテナントDBを管理する簡単な方法
+`typeorm-mtdb`は、以下の3つの概念を使ってデータベースを管理します：
 
-まずEntityを修正してmigrateを生成します。
+1. **プラットフォームDB**
+2. **テナントクラスDB**
+3. **テナントインスタンスDB**
 
-```
+### プラットフォームDB
+プラットフォームDBは、標準的なTypeORMデータベースとして扱われます。これは、全体のデータベース管理に使用され、テナントリストなどの共通情報を保持します。
+
+### テナントDB
+テナントDBは、各テナントが独自のスキーマを持つ形で管理されます。これをさらに以下の2つに分けて管理します：
+
+- **クラススキーマ（テナントクラスDB）**
+- **インスタンススキーマ（テナントインスタンスDB）**
+
+### クラススキーマとインスタンススキーマ
+テナントのエンティティとマイグレーションは、まずクラススキーマに対して実行されます。その後、クラススキーマのマイグレーション状態が各テナントのインスタンススキーマに反映されます。この仕組みにより、複数のテナントスキーマを同期させることができます。
+
+## コマンドの使用例
+
+### 1. テナントクラススキーマDBの差分を比較してマイグレーションファイルを生成
+```sh
 mtdb generate tenant
 ```
 
-続いて、Masterテナントに対してマイグレーションを実行します。
-
-```
+### 2. テナントクラススキーマにマイグレーションを反映
+```sh
 mtdb migrate tenant
 ```
-最後に、マスターテナントから他のテナントスキーマに対してdistributeを実施し、反映させます。
 
+### 3. 新しいテナントインスタンススキーマを生成
+```sh
+mtdb spawn
 ```
-mtdb distribute
-```
-マスターテナントスキーマは開発時にも有効に使えます。
 
-
-## コンセプト
-
-ここで採用するマルチテナントの方式は、各テナントがそれぞれ同じ構造の固有空間のスキーマをもつ`スキーマベース`の方式です。
-
-単一の`platform`と複数の`tenant`両者間の構成を想定しており、テナントがテナントを持つことはできません。
-
-テナントはそれぞれのスキーマを保有しますが、マイグレーションを管理するために`マスターテナント`スキーマを用います。
-
-### テナントのスキーマを同期させる方法
-
-platformは通常のmigrationとentityを使うデータベースの管理方式と基本的に同じです。
-
-しかし、tenantは１つのmigratioを複数のスキーマで共有して使います。
-
-ここでは、`マスターテナント`スキーマを用いて解決します。
-
-マスターテナントは単一スキーマで、他のすべてのテナントの基準となります。
-
-テナントのマイグレーションやエンティティをまず`マスターテナント`に反映したあと、`distribute` というコマンドを利用してそれぞれのテナントスキーマを同期させます。
-
-`revert`や`migrate`においても同じやり方で管理します。
-
-マスターテナントはテナントが一個しかない開発環境でも有効に活用できます。
-
-ローカルではマスターテナントに対して開発を行い、製品環境では通常のテナントスキーマを向けさせることができます。
-
-### テナントを管理する方法
-
-platformスキーマに特定のテーブルを指定して、このレコードとテナントスキーマを同期させます。
-`spawn`コマンドを利用すると、テーブルをもとにスキーマが生成されます。
-
-# Contents 
-- [コンセプト](#コンセプト)
-- [Usage](#usage)
-  - [doctor](#mtdb-doctor-target)
-
-
-## Usage
-
-The CLI is available through the `mtdb` command.
-
-Every `<target>` in this document is `platform` or `tenant`. Specify the target on which you want to execute the action.
-
-## オリジナル機能
-
-### [`mtdb spawn`](./actions/spawn-ja.md)
-
-テナントスキーマとプラットフォームのテナントレコードを同期させます。
-必要に応じてスキーマを作成します。
-
-### [`mtdb distribute`](./actions/distribute.md)
-
-Distribute migrations to all tenant schemas from master tenant schema.
-
-This is key concept for managing mulit-tenant schema.
-
-When manipulating the schema of tenants, the master tenant schema is manipulated first and then applied with distribute.
-
-After distribute is executed, the master tenant schema and all tenants' schemas are synchronized.
-
-For example, following actions can be performed using this concept
-
-#### To revert a tenant's schema:
-
-```
-mtdb revert tenant
+### 4. テナントクラスDBのマイグレーション状態をインスタンスDBに配布して同期
+```sh
 mtdb distribute
 ```
 
-#### To migrate a tenant's schema: 
-
+### 5. `generate`と`migrate`はプラットフォームDBに対しても実行可能
+```sh
+mtdb generate platform
+mtdb migrate platform
 ```
-mtdb migrate tenant
-mtdb distribute
-```
-
-
-### [`mtdb doctor <target>`](./actions/doctor.md)
-
-Displays the execution status of the target's migrations in yaml format.
-When executed for a tenant, it will be displayed along with the presence or absence of each schema.
-The results are displayed on standard output.
-
-## Alias
-
-Alias of typeorm commands but works with target you specified.
-
-### [`mtdb generate <target>`](./actions/generate.md)
-
-Generate migrations on target database
-
-Alias of [`typeorm migration:generate`](https://orkhan.gitbook.io/typeorm/docs/migrations#generating-migrations)
-
-### `mtdb migrate <target>`
-
-Run migrations on target database.
-
-
-### `mtdb revert <target>`
-
-Alias of [`typeorm migration:revert`](https://orkhan.gitbook.io/typeorm/docs/migrations#running-and-reverting-migrations)
-
-### `mtdb create <target>`
-
-Alias of [`typeorm migration:create`](https://orkhan.gitbook.io/typeorm/docs/migrations#creating-a-new-migration)
-
 
 ## Configuration
 Set `mtdb.config.json` in your project root.
 ```jsonc
 {
-    // Configuration for plaform
+    // プラットフォームDBの設定
     "platform": { 
-        "database": "00_provider",
-        "entities": "src/db/entities/provider/*.ts",
-        "migrations": ["src/db/migrations/provider/*.ts"],
-        // `create` `generate` command creates file in this folder
-        "migrationOutDir": "src/db/migrations/provider"
+        "database": "platform",
+        "entities": "src/db/entities/platform/*.ts",
+        "migrations": ["src/db/migrations/platform/*.ts"],
+        // `create` `generate` コマンドはここにファイルを生成します
+        "migrationOutDir": "src/db/migrations/platform"
     },
-    // Configuration for tenant
+    // テナントDBの設定
     "tenant": {
-        "classDbName": "01_consumer",
-        // Name of tenant schema will be `02_{relations.tenantTable[relation.keyColumn]}`.
-        // If there was record like {'id': 474, 'name': 'Happy tenant'}, schema will be named as `02_474`
-        "prefix": "02_",
-        "entities": "src/db/entities/consumer/*.ts",
-        "migrations": ["src/db/migrations/consumer/*.ts"],
+        "classDbName": "tenant_class",
+        // テナントインスタンスDBの名前は `#{relations.tenantTable[relation.keyColumn]}`になります。
+        // テナントのidがmy_tenantである場合、`#my_tenant`というスキーマが作成されます。
+        "prefix": "#",
+        "entities": "src/db/entities/tenant/*.ts",
+        "migrations": ["src/db/migrations/tenant/*.ts"],
         // `create` `generate` command creates file in this folder
-        "migrationOutDir": "src/db/migrations/consumer"
+        "migrationOutDir": "src/db/migrations/tenant"
     },
-    // Common settings
+    // 共通設定
     "common": {
-        // Define what table is used for migration management
+        // typeormのマイグレーションテーブルの名前を指定します。
         "migrationTableName": "typeorm_migrations"
     },
-    // Define relations
-    // This setting means that tenants are set in `client` table, and the key is set to `id`.
-    // If records exists in, then tenant schema will be created with `spawn` command.
+    // テナントの情報がどこにあるかを定義します。
+    // この設定では`platform.tenants`がテナントのリストであり、テナントインスタンススキーマの名前としてidを使うことを意味しています。
     "relation": {
-        "tenantTable": "client",
+        "tenantTable": "tenants",
         "keyColumn": "id"
     }
 }
