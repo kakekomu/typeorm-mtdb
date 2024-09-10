@@ -1,5 +1,5 @@
 import { DataSourceOptions } from "typeorm";
-import { checkDatabase, createDatabase } from "typeorm-extension/dist";
+import { checkDatabase, createDatabase } from "typeorm-extension";
 import { defaultDataSource } from "../sources";
 import { Config, Logger } from "../utils";
 
