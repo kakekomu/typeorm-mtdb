@@ -1,7 +1,7 @@
-import { Config, Logger } from "../utils";
-import { checkDatabase, createDatabase } from "typeorm-extension";
+import { DataSourceOptions } from "typeorm";
+import { checkDatabase, createDatabase } from "typeorm-extension/dist";
 import { defaultDataSource } from "../sources";
-import { DataSource, DataSourceOptions } from "typeorm";
+import { Config, Logger } from "../utils";
 
 export default async function (this: Config) {
     const logger = new Logger();
@@ -19,7 +19,7 @@ export default async function (this: Config) {
     } as DataSourceOptions;
 
     const { exists: platformExists } = await checkDatabase({
-        dataSource: new DataSource(platformOptions),
+        options: platformOptions,
     });
     if (!platformExists) {
         logger.log("Creating platform db...");
@@ -31,7 +31,7 @@ export default async function (this: Config) {
     }
 
     const { exists: tenantExists } = await checkDatabase({
-        dataSource: new DataSource(tenantOptions),
+        options: tenantOptions,
     });
     if (!tenantExists) {
         logger.log("Creating tenant db...");
