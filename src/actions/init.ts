@@ -1,22 +1,20 @@
-import { Config, Logger } from "../utils";
+import { DataSource } from "typeorm";
 import { checkDatabase, createDatabase } from "typeorm-extension";
 import { defaultDataSource } from "../sources";
-import { DataSource, DataSourceOptions } from "typeorm";
+import { Config, Logger } from "../utils";
 
-export default async function (this: Config) {
+export default async function (config: Config) {
     const logger = new Logger();
     logger.log("Initializing multitenant db...");
-    const defaultConnection = await defaultDataSource.then((x) =>
-        x.initialize()
-    );
+    const defaultOptions = await defaultDataSource;
     const platformOptions = {
-        ...defaultConnection.options,
-        database: this.platform.database,
-    } as DataSourceOptions;
+        ...defaultOptions,
+        database: config.platform.database,
+    };
     const tenantOptions = {
-        ...defaultConnection.options,
-        database: this.tenant.classDbName,
-    } as DataSourceOptions;
+        ...defaultOptions,
+        database: config.tenant.classDbName,
+    };
 
     const { exists: platformExists } = await checkDatabase({
         dataSource: new DataSource(platformOptions),
@@ -29,6 +27,7 @@ export default async function (this: Config) {
             options: platformOptions,
         });
     }
+    const platform = await new DataSource(platformOptions).initialize();
 
     const { exists: tenantExists } = await checkDatabase({
         dataSource: new DataSource(tenantOptions),
@@ -41,6 +40,10 @@ export default async function (this: Config) {
             options: tenantOptions,
         });
     }
+    const tenant = await new DataSource(tenantOptions).initialize();
     logger.log("Multitenant db initialized.");
+    await platform.destroy();
+    await tenant.destroy();
+
     process.exit(0);
 }

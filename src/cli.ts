@@ -18,26 +18,26 @@ async function main() {
     const action = (() => {
         switch (args._[0]) {
             case "init":
-                return init.bind(config);
+                return init(config);
             case "generate":
-                return generate.bind(config, args.target);
+                return generate(config, args.target as "platform" | "tenant");
             case "migrate":
-                return migrate.bind(config, args.target);
+                return migrate(config, args.target as "platform" | "tenant");
             case "revert":
-                return revert.bind(config, args.target);
+                return revert(config, args.target as "platform" | "tenant");
             case "doctor":
-                return doctor.bind(config, args.target);
+                return doctor(config, args.target as "platform" | "tenant");
             case "create":
-                return create.bind(config, args.target);
+                return create(config, args.target as "platform" | "tenant");
             case "spawn":
-                return spawn.bind(config);
+                return spawn(config);
             case "distribute":
-                return distribute.bind(config);
+                return distribute(config);
             default:
                 throw new Error("Invalid action");
         }
     })();
-    action();
+    await action;
 }
 
 main();

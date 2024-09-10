@@ -9,7 +9,7 @@ import {
 } from "../utils";
 import * as chalk from "chalk";
 
-export default async function (this: Config) {
+export default async function (config: Config) {
     const logger = new Logger("Distribute");
     logger.log("Distributing to tenant schemas");
     const providerConnection = await platformDataSource.then((x) =>
@@ -17,19 +17,19 @@ export default async function (this: Config) {
     );
     const tenantConnection = await tenantDataSource.then((x) => x.initialize());
     const executedInMaster = await listExecutedMigrations(
-        this,
+        config,
         tenantConnection
     );
-    const repo = await getTenantDbNames(this, providerConnection);
+    const repo = await getTenantDbNames(config, providerConnection);
     for await (const dbName of repo) {
         const logger = new Logger(`Distribute.${dbName}`);
-        const source = await getTenantDataSource(this, dbName);
+        const source = await getTenantDataSource(config, dbName);
         const { exists } = await checkDatabase({ options: source.options });
         let modified = 0;
         if (exists) {
             const connection = await source.initialize();
             const executedMigrations = await listExecutedMigrations(
-                this,
+                config,
                 connection
             );
             const actions = connection.migrations
@@ -64,7 +64,7 @@ export default async function (this: Config) {
                     await connection
                         .createQueryBuilder()
                         .insert()
-                        .into(this.common.migrationTableName)
+                        .into(config.common.migrationTableName)
                         .values({
                             name: migration.name,
                             timestamp: new Date().getTime(),
@@ -75,7 +75,7 @@ export default async function (this: Config) {
                     await connection
                         .createQueryBuilder()
                         .delete()
-                        .from(this.common.migrationTableName)
+                        .from(config.common.migrationTableName)
                         .where("name = :name", { name: migration.name })
                         .execute();
                 }

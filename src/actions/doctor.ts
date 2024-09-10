@@ -10,7 +10,7 @@ import {
 import { checkDatabase } from "typeorm-extension";
 import * as chalk from "chalk"
 
-export default async function (this: Config, target: Target) {
+export default async function (config: Config, target: Target) {
     const platformConnection = await platformDataSource.then((x) =>
         x.initialize()
     );
@@ -25,7 +25,7 @@ export default async function (this: Config, target: Target) {
                 .forEach((x) => logger.log(`${x.name}:`, 2));
             logger.log("Migrations:", 1);
             const launchedMigrations: string[] = await listExecutedMigrations(
-                this,
+                config,
                 platformConnection
             );
             platformConnection.migrations.forEach((x) => {
@@ -45,7 +45,7 @@ export default async function (this: Config, target: Target) {
             const tenantMigrations = tenantMaster.migrations.reverse();
             logger.log("Migrations:", 1);
             const masterExecuted = await listExecutedMigrations(
-                this,
+                config,
                 tenantMaster
             );
             tenantMigrations.forEach((x) => {
@@ -54,7 +54,7 @@ export default async function (this: Config, target: Target) {
                     : chalk.blue("pending");
                 logger.log(`${x.name}: ${status}`, 2);
             });
-            const tenantsRepo = getTenantRepository(this, platformConnection);
+            const tenantsRepo = getTenantRepository(config, platformConnection);
             const tenants = await tenantsRepo.find();
             logger.log("Entities:", 1);
             tenantMaster.entityMetadatas
@@ -64,8 +64,8 @@ export default async function (this: Config, target: Target) {
             logger.log(`Count: ${tenants.length}`, 2);
             logger.log("Tenant DB:", 2);
             for await (const tenant of tenants) {
-                const tenantKey = tenant[this.relation.keyColumn];
-                const dbName = this.tenant.prefix + tenantKey;
+                const tenantKey = tenant[config.relation.keyColumn];
+                const dbName = config.tenant.prefix + tenantKey;
                 logger.log(`'${dbName}':`, 3);
                 const newOption = {
                     ...tenantMaster.options,
@@ -82,7 +82,7 @@ export default async function (this: Config, target: Target) {
                 }
                 const connection = await new DataSource(newOption).initialize();
                 const tenantExecuted = await listExecutedMigrations(
-                    this,
+                    config,
                     connection
                 );
                 logger.log("Migrations:", 4);

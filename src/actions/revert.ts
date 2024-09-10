@@ -1,7 +1,7 @@
 import { platformDataSource, tenantDataSource } from "../sources";
 import { Logger, Target, getTenantRepository, type Config } from "../utils";
 
-export default async function (this: Config, target: Target) {
+export default async function (config: Config, target: Target) {
     const providerConnection = await platformDataSource.then((x) =>
         x.initialize()
     );
@@ -14,7 +14,7 @@ export default async function (this: Config, target: Target) {
             await providerConnection.destroy();
             process.exit(0);
         case "tenant":
-            const tenantsRepo = getTenantRepository(this, providerConnection);
+            const tenantsRepo = getTenantRepository(config, providerConnection);
             const tenants = await tenantsRepo.find();
             const consumerConnection = await tenantDataSource.then((x) =>
                 x.initialize()

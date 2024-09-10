@@ -1,7 +1,7 @@
 import { Config, Target, typeOrmCli } from "../utils";
 import { join } from "path";
 
-export default async function (this: Config, target: Target) {
+export default async function (config: Config, target: Target) {
     const sourcePath = (() => {
         const mtdb = require("typeorm-mtdb");
         if (mtdb) {
@@ -12,23 +12,23 @@ export default async function (this: Config, target: Target) {
     })();
     switch (target) {
         case "tenant":
-            if (!this.tenant.migrationOutDir) {
+            if (!config.tenant.migrationOutDir) {
                 throw new Error("Tenant migration directory not found");
             }
             typeOrmCli([
                 "migration:generate",
-                `${this.tenant.migrationOutDir}/generated`,
+                `${config.tenant.migrationOutDir}/generated`,
                 `--dataSource`,
                 join(sourcePath, `tenant.js`),
             ]);
             break;
         case "platform":
-            if (!this.platform.migrationOutDir) {
+            if (!config.platform.migrationOutDir) {
                 throw new Error("Platform migration directory not found");
             }
             typeOrmCli([
                 "migration:generate",
-                `${this.platform.migrationOutDir}/generated`,
+                `${config.platform.migrationOutDir}/generated`,
                 `--dataSource`,
                 join(sourcePath, `platform.js`),
             ]);

@@ -1,6 +1,6 @@
 {
     "name": "typeorm-mtdb",
-    "version": "0.1.7",
+    "version": "0.1.18",
     "description": "Multi-Tenant Database utility based on TypeORM",
     "main": "dist/index.js",
     "files": [
@@ -22,7 +22,7 @@
         "dotenv": "^16.4.5",
         "reflect-metadata": "^0.1.13",
         "typeorm": "^0.3.17",
-        "typeorm-extension": "^3.5.1",
+        "typeorm-extension": "3.4.0",
         "yargs": "^17.7.2"
     },
     "devDependencies": {

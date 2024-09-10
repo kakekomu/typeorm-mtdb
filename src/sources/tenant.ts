@@ -1,10 +1,11 @@
 import { DataSource } from "typeorm";
 import { readConfig, parseArgs, arraySafe } from "../utils";
+import { MysqlConnectionOptions } from "typeorm/driver/mysql/MysqlConnectionOptions";
 
 async function buildTenantDataSource() {
     await parseArgs();
     const config = await readConfig();
-    return new DataSource({
+    const options: MysqlConnectionOptions = {
         name: config.tenant.classDbName,
         type: "mysql",
         host: process.env.DB_HOST_NAME,
@@ -16,7 +17,8 @@ async function buildTenantDataSource() {
         entities: arraySafe(config.tenant.entities),
         migrationsTableName: "typeorm_migrations",
         migrationsTransactionMode: "all",
-    });
+    };
+    return new DataSource(options);
 }
 
 export default buildTenantDataSource();
