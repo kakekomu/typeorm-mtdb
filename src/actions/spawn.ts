@@ -7,13 +7,15 @@ import {
     getTenantDataSource,
     getTenantDbNames,
 } from "../utils";
+import { recordDbCreation } from "../internal/get-internal-db-instances-repository";
 
 export default async function (config: Config) {
     const logger = new Logger("Spawn");
     logger.log("Generating tenant schema");
-    const providerConnection = await platformDataSource.then((x) =>
-        x.initialize()
-    );
+    const providerConnection = await platformDataSource;
+    if (!providerConnection.isInitialized) {
+        await providerConnection.initialize();
+    }
     const repo = await getTenantDbNames(config, providerConnection);
     let created = 0;
     for await (const dbName of repo) {
@@ -27,6 +29,7 @@ export default async function (config: Config) {
                 options: source.options,
                 synchronize: false,
             });
+            await recordDbCreation(dbName);
             logger.log(`Schema created`);
             created++;
         }

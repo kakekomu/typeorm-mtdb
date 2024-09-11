@@ -1,6 +1,6 @@
 {
     "name": "typeorm-mtdb",
-    "version": "0.1.18",
+    "version": "0.1.20",
     "description": "Multi-Tenant Database utility based on TypeORM",
     "main": "dist/index.js",
     "files": [
@@ -26,6 +26,7 @@
         "yargs": "^17.7.2"
     },
     "devDependencies": {
+        "@faker-js/faker": "^9.0.0",
         "@jest/globals": "^29.7.0",
         "@testcontainers/mysql": "^10.10.0",
         "@types/jest": "^29.5.12",

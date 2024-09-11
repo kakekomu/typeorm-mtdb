@@ -15,7 +15,7 @@ export type Action = (typeof actions)[number];
 export type Target = (typeof targets)[number];
 
 export default async function () {
-    const args = yargs(hideBin(process.argv))
+    const definition = yargs(hideBin(process.argv))
         .command("init", "Initialize multitenant database")
         .command(
             "generate <target>",
@@ -74,9 +74,10 @@ export default async function () {
             type: "boolean",
             default: false,
         })
-        .parseSync();
+        .command("reset", "Reset all database");
+    const parsed = definition.parseSync();
 
     const { config } = await import("dotenv");
     config();
-    return args;
+    return { args: parsed, definition };
 }
