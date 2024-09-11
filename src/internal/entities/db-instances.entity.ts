@@ -6,16 +6,13 @@ import {
     CreateDateColumn,
 } from "typeorm";
 
-@Entity()
+@Entity("db_instances")
 export class DBInstancesEntity {
-    @PrimaryGeneratedColumn("uuid")
-    id: string;
+    @PrimaryGeneratedColumn()
+    id: number;
 
     @Column()
-    name: string;
-
-    @Column()
-    type: string;
+    dbName: string;
 
     @Column()
     status: string;

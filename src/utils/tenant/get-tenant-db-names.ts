@@ -1,6 +1,6 @@
 import { DataSource } from "typeorm";
 import { Config } from "../readconfig";
-import { buildTenantDbName } from "..";
+import { buildTenantDbName } from "../tenant"
 import getTenantRepository from "./get-repository";
 
 /** get tenant repositories */

@@ -9,11 +9,12 @@ import {
     spawn,
     create,
     init,
+    reset,
 } from "./actions";
 import { readConfig, parseArgs } from "./utils";
 
 async function main() {
-    const args = await parseArgs();
+    const { args, definition } = await parseArgs();
     const config = await readConfig();
     const action = (() => {
         switch (args._[0]) {
@@ -33,8 +34,11 @@ async function main() {
                 return spawn(config);
             case "distribute":
                 return distribute(config);
+            case "reset":
+                return reset(config);
             default:
-                throw new Error("Invalid action");
+                definition.showHelp();
+                return;
         }
     })();
     await action;

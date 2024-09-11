@@ -162,8 +162,8 @@ describe("ReadConfig", () => {
             `;
             jest.spyOn(fs, "readFileSync").mockReturnValue(json);
             // force to read json file
-            jest.spyOn(fs, "existsSync").mockImplementation((path: string) => {
-                if (path.endsWith("ts")) {
+            jest.spyOn(fs, "existsSync").mockImplementation((path) => {
+                if ((path as string).endsWith("ts")) {
                     return false;
                 } else {
                     return true;
