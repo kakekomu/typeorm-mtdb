@@ -22,6 +22,8 @@ export default async function (config: Config) {
             synchronize: false,
             options: internalDataSourceOptions,
         });
+        await internalDataSource.initialize();
+        await internalDataSource.runMigrations();
         await recordDbCreation(internalDataSourceOptions.database);
     }
     if (!internalDataSource.isInitialized) {
